@@ -1,0 +1,13 @@
+package com.senai.carteirinha_digital_senai.data
+
+import kotlinx.coroutines.flow.Flow
+
+class AlunoRepository (private val alunoDao: AlunoDAO) {
+    // Retorna o Flow do banco de dados (sempre atualizado)
+    val aluno: Flow<Aluno?> = alunoDao.getAluno()
+
+    // Função para salvar ou atualizar o aluno
+    suspend fun salvarAluno(aluno: Aluno) {
+        alunoDao.insertOrUpdate(aluno)
+    }
+}

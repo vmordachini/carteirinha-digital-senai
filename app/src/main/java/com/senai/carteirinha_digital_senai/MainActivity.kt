@@ -27,13 +27,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.senai.carteirinha_digital_senai.data.Aluno
-import com.senai.carteirinha_digital_senai.data.AlunoRepository
-import com.senai.carteirinha_digital_senai.data.AppDatabase
-import com.senai.carteirinha_digital_senai.ui.AlunoViewModel
-import com.senai.carteirinha_digital_senai.ui.AlunoViewModelFactory
-import com.senai.carteirinha_digital_senai.ui.DadosAlunoScreen
-import com.senai.carteirinha_digital_senai.ui.theme.CarteirinhadigitalsenaiTheme
+import com.senai.carteirinha_digital_senai.data.model.Aluno
+import com.senai.carteirinha_digital_senai.data.repository.AlunoRepository
+import com.senai.carteirinha_digital_senai.data.local.AppDatabase
+import com.senai.carteirinha_digital_senai.features.carteirinha.viewmodel.AlunoViewModelFactory
+import com.senai.carteirinha_digital_senai.features.configuracao.ui.DadosAlunoScreen
+import com.senai.carteirinha_digital_senai.core.ui.theme.CarteirinhadigitalsenaiTheme
+import com.senai.carteirinha_digital_senai.core.util.gerarQrCode
+import com.senai.carteirinha_digital_senai.features.carteirinha.viewmodel.AlunoViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

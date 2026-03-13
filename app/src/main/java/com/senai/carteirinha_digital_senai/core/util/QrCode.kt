@@ -1,4 +1,4 @@
-package com.senai.carteirinha_digital_senai
+package com.senai.carteirinha_digital_senai.core.util
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable

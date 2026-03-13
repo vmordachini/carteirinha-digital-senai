@@ -1,5 +1,7 @@
-package com.senai.carteirinha_digital_senai.data
+package com.senai.carteirinha_digital_senai.data.repository
 
+import com.senai.carteirinha_digital_senai.data.local.AlunoDAO
+import com.senai.carteirinha_digital_senai.data.model.Aluno
 import kotlinx.coroutines.flow.Flow
 
 class AlunoRepository (private val alunoDao: AlunoDAO) {

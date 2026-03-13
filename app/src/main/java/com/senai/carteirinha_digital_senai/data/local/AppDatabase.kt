@@ -1,9 +1,10 @@
-package com.senai.carteirinha_digital_senai.data
+package com.senai.carteirinha_digital_senai.data.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.senai.carteirinha_digital_senai.data.model.Aluno
 
 @Database(entities = [Aluno::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {

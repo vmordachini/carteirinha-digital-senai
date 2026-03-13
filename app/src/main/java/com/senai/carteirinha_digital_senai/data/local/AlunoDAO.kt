@@ -1,9 +1,10 @@
-package com.senai.carteirinha_digital_senai.data
+package com.senai.carteirinha_digital_senai.data.local
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.senai.carteirinha_digital_senai.data.model.Aluno
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -11,6 +12,6 @@ interface AlunoDAO {
     @Query("SELECT * FROM alunos LIMIT 1")
     fun getAluno(): Flow<Aluno?>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertOrUpdate(aluno: Aluno)
 }

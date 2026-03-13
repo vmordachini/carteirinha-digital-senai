@@ -3,37 +3,20 @@ package com.senai.carteirinha_digital_senai
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import coil.compose.AsyncImage
-import com.senai.carteirinha_digital_senai.data.model.Aluno
 import com.senai.carteirinha_digital_senai.data.repository.AlunoRepository
 import com.senai.carteirinha_digital_senai.data.local.AppDatabase
 import com.senai.carteirinha_digital_senai.features.carteirinha.viewmodel.AlunoViewModelFactory
 import com.senai.carteirinha_digital_senai.features.configuracao.ui.DadosAlunoScreen
 import com.senai.carteirinha_digital_senai.core.ui.theme.CarteirinhadigitalsenaiTheme
-import com.senai.carteirinha_digital_senai.core.util.gerarQrCode
+import com.senai.carteirinha_digital_senai.features.carteirinha.ui.CarteirinhaScreen
 import com.senai.carteirinha_digital_senai.features.carteirinha.viewmodel.AlunoViewModel
 
 class MainActivity : ComponentActivity() {
@@ -68,9 +51,10 @@ class MainActivity : ComponentActivity() {
                         // Tela da Carteirinha
                         composable("carteirinha") {
                             aluno?.let { dados ->
-                                CarteirinhaDeEstudante(
+                                CarteirinhaScreen(
                                     aluno = dados,
-                                    onEditar = { navController.navigate("configurar") }
+                                    onEditar = { navController.navigate("configurar") },
+                                    onDeletar = { viewModel.deletarAluno() }
                                 )
                             }
                         }
@@ -89,99 +73,6 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun CarteirinhaDeEstudante(aluno: Aluno, onEditar: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.senai_s_o_paulo_logo),
-                contentDescription = "Logo SENAI",
-                modifier = Modifier.height(40.dp)
-            )
-            IconButton(onClick = onEditar) {
-                Icon(Icons.Default.Edit, contentDescription = "Editar Dados")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(450.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
-            elevation = CardDefaults.cardElevation(8.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                // Foto dinâmica do banco de dados
-                AsyncImage(
-                    model = aluno.fotoUri ?: R.drawable.avatar_vazio,
-                    contentDescription = "Foto do Aluno",
-                    modifier = Modifier
-                        .size(150.dp)
-                        .clip(CircleShape)
-                        .background(Color.Gray),
-                    contentScale = ContentScale.Crop,
-                    error = painterResource(R.drawable.avatar_vazio),
-                    placeholder = painterResource(R.drawable.avatar_vazio)
-                )
-
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = aluno.nome.uppercase(),
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                    Text(
-                        text = aluno.curso,
-                        fontSize = 16.sp,
-                        color = Color.DarkGray
-                    )
-                    Text(
-                        text = "Matrícula: ${aluno.matricula}",
-                        fontSize = 14.sp,
-                        color = Color.Gray
-                    )
-                }
-
-                // QR Code gerado a partir do código inserido pelo usuário
-                val qrCodeBitmap = gerarQrCode(aluno.codigoQr)
-                if (qrCodeBitmap != null) {
-                    Image(
-                        bitmap = qrCodeBitmap.asImageBitmap(),
-                        contentDescription = "QR Code",
-                        modifier = Modifier.size(120.dp)
-                    )
-                }
-
-                Text(
-                    text = "CARTEIRINHA DIGITAL",
-                    fontWeight = FontWeight.Light,
-                    letterSpacing = 2.sp,
-                    color = Color.Red
-                )
             }
         }
     }

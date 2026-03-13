@@ -12,4 +12,9 @@ class AlunoRepository (private val alunoDao: AlunoDAO) {
     suspend fun salvarAluno(aluno: Aluno) {
         alunoDao.insertOrUpdate(aluno)
     }
+
+    // Encaminha a operação de exclusão para o DAO
+    suspend fun deletarAluno() {
+        alunoDao.deletarAluno()
+    }
 }

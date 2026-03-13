@@ -17,12 +17,25 @@ fun DadosAlunoScreen(
     viewModel: AlunoViewModel,
     onDadosSalvos: () -> Unit
 ) {
+    val alunoExistente by viewModel.alunoState.collectAsState()
+
     // Estados locais para o formulário
     var nome by remember { mutableStateOf("") }
     var curso by remember { mutableStateOf("") }
     var matricula by remember { mutableStateOf("") }
     var codigoQr by remember { mutableStateOf("") }
     var fotoUri by remember { mutableStateOf<String?>(null) }
+
+    // Preenche os campos se já houver um aluno cadastrado (Update)
+    LaunchedEffect(alunoExistente) {
+        alunoExistente?.let {
+            nome = it.nome
+            curso = it.curso
+            matricula = it.matricula
+            codigoQr = it.codigoQr
+            fotoUri = it.fotoUri
+        }
+    }
 
     // Launcher para selecionar imagem da galeria
     val launcher = rememberLauncherForActivityResult(

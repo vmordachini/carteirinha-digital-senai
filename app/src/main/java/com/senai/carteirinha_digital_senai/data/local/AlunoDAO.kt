@@ -9,9 +9,16 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AlunoDAO {
+
+    // Busca o único aluno cadastrado
     @Query("SELECT * FROM alunos LIMIT 1")
     fun getAluno(): Flow<Aluno?>
 
+    // Insere um novo aluno ou substitui o existente se houver conflito de ID
     @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertOrUpdate(aluno: Aluno)
+
+    // Remove todos os registros da tabela de alunos para o "Reset" da carteirinha
+    @Query("DELETE FROM alunos")
+    suspend fun deletarAluno()
 }

@@ -32,4 +32,10 @@ class AlunoViewModel(private val repository: AlunoRepository) : ViewModel() {
             repository.salvarAluno(novoAluno)
         }
     }
+
+    fun deletarAluno() {
+        viewModelScope.launch {
+            repository.deletarAluno() // Precisamos adicionar isso no repositório também
+        }
+    }
 }

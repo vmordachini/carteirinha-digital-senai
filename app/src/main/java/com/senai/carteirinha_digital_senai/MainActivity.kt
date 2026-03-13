@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,6 +17,10 @@ import com.senai.carteirinha_digital_senai.data.local.AppDatabase
 import com.senai.carteirinha_digital_senai.features.carteirinha.viewmodel.AlunoViewModelFactory
 import com.senai.carteirinha_digital_senai.features.configuracao.ui.DadosAlunoScreen
 import com.senai.carteirinha_digital_senai.core.ui.theme.CarteirinhadigitalsenaiTheme
+import com.senai.carteirinha_digital_senai.data.repository.AuthRepository
+import com.senai.carteirinha_digital_senai.features.auth.ui.LoginScreen
+import com.senai.carteirinha_digital_senai.features.auth.viewmodel.AuthViewModel
+import com.senai.carteirinha_digital_senai.features.auth.viewmodel.AuthViewModelFactory
 import com.senai.carteirinha_digital_senai.features.carteirinha.ui.CarteirinhaScreen
 import com.senai.carteirinha_digital_senai.features.carteirinha.viewmodel.AlunoViewModel
 
@@ -40,14 +45,35 @@ class MainActivity : ComponentActivity() {
                 // Se não houver dados, ele é forçado a configurar primeiro
                 val destinoInicial = if (aluno == null) "configurar" else "carteirinha"
 
+                val authRepository = AuthRepository(LocalContext.current)
+                val authViewModel: AuthViewModel = viewModel(factory = AuthViewModelFactory(
+                    authRepository
+                )
+                )
+                val savedPin by authViewModel.savedPin.collectAsState()
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = destinoInicial
+                        startDestination = when {
+                            savedPin == null -> "cadastrar_pin"
+                            else -> "login"
+                        }
                     ) {
+                        composable("cadastrar_pin") {
+                            LoginScreen(viewModel = authViewModel, isCadastro = true) {
+                                navController.navigate("configurar")
+                            }
+                        }
+                        composable("login") {
+                            LoginScreen(viewModel = authViewModel) {
+                                navController.navigate("carteirinha")
+                            }
+                        }
+
                         // Tela da Carteirinha
                         composable("carteirinha") {
                             aluno?.let { dados ->

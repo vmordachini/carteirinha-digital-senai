@@ -21,4 +21,11 @@ class AuthRepository(private val context: Context) {
     suspend fun salvarPin(pin: String) {
         context.dataStore.edit { it[PIN_KEY] = pin }
     }
+
+    // Em AuthRepository.kt
+    suspend fun resetarPin() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(PIN_KEY)
+        }
+    }
 }

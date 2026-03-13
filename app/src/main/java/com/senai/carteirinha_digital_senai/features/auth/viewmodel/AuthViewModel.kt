@@ -17,4 +17,10 @@ class AuthViewModel (private val repository: AuthRepository) : ViewModel() {
     fun cadastrarPin(pin: String) {
         viewModelScope.launch { repository.salvarPin(pin) }
     }
+
+    fun resetarPin() {
+        viewModelScope.launch {
+            repository.resetarPin()
+        }
+    }
 }
